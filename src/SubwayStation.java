@@ -9,6 +9,20 @@ public class SubwayStation {
     }
 
     public String getLinesServing() {
+
         return linesInService;
+    }
+
+    public String getStationName() {
+        return stationName;
+    }
+
+    public boolean servesStation(String subwayLine) {
+        for (int i = 0; i < linesInService.length() - 1; i++) {
+            if (linesInService.substring(i, i+1).equalsIgnoreCase(subwayLine)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,5 +1,7 @@
+import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,7 +22,36 @@ public class Main {
             stations.add(s);
         }
 
+        Scanner scan = new Scanner(System.in);
 
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.print("Get from ");
+
+        int startingStationChoice = (int) (Math.random() * stations.toArray().length);
+        SubwayStation startingStation = stations.get(startingStationChoice);
+        System.out.print(startingStation.getStationName());
+
+        System.out.print(" to ");
+
+        int endingStationChoice = (int) (Math.random() * stations.toArray().length);
+        if (endingStationChoice == startingStationChoice) {
+            if (endingStationChoice < stations.toArray().length) {
+                endingStationChoice += 1;
+            } else {
+                endingStationChoice -= 1;
+            }
+        }
+        SubwayStation endingStation = stations.get(endingStationChoice);
+
+        System.out.print(endingStation.getStationName());
+
+        System.out.println(" using two transfers.");
+        System.out.println("--------------------------------------------------------------------------------");
+
+        System.out.print("What train would you like to start from? ");
+        String startingSubwayLine = scan.nextLine();
+        boolean serveStation = startingStation.servesStation(startingSubwayLine);
+        System.out.println(serveStation);
 
         // Below adds all subway stations :
 
@@ -53,4 +84,5 @@ public class Main {
             return fileData;
         }
     }
+
 }
