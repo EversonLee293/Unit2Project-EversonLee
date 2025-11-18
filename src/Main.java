@@ -10,6 +10,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
+        boolean firstPhase = true;
+        boolean secondPhase = false;
 
         ArrayList<String> stationData = getFileData("src/stations");
         ArrayList<SubwayStation> stations = new ArrayList<SubwayStation>();
@@ -48,10 +50,28 @@ public class Main {
         System.out.println(" using two transfers.");
         System.out.println("--------------------------------------------------------------------------------");
 
-        System.out.print("What train would you like to start from? ");
-        String startingSubwayLine = scan.nextLine();
-        boolean serveStation = startingStation.servesStation(startingSubwayLine);
-        System.out.println(serveStation);
+        String subwayLinesString = "1234567ABCDEFGJLMNQRSWZ";
+        while (firstPhase) {
+            System.out.print("What train would you like to start from? ");
+            String startingSubwayLine = scan.nextLine();
+            boolean serveStation = startingStation.servesStation(startingSubwayLine);
+            //System.out.println(serveStation);
+            if (serveStation) {
+                firstPhase = false;
+                secondPhase = true;
+            } else if (subwayLinesString.contains(startingSubwayLine)) {
+                System.out.println("That line doesn't go there. Try again.");
+            } else {
+                System.out.println("That's not a subway line. Try again.");
+            }
+        }
+
+        while (secondPhase) {
+            System.out.print("What train will you transfer to first? ");
+            String transferSubwayLine = scan.nextLine();
+            boolean lineConnects =
+        }
+
 
         // Below adds all subway stations :
 
