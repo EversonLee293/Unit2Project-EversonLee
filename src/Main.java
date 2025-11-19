@@ -12,6 +12,7 @@ public class Main {
 
         boolean firstPhase = true;
         boolean secondPhase = false;
+        boolean thirdPhase = false;
 
         ArrayList<String> stationData = getFileData("src/stations");
         ArrayList<SubwayStation> stations = new ArrayList<SubwayStation>();
@@ -50,26 +51,72 @@ public class Main {
         System.out.println(" using two transfers.");
         System.out.println("--------------------------------------------------------------------------------");
 
-        String subwayLinesString = "1234567ABCDEFGJLMNQRSWZ";
+        String subwayLinesString = "1234567AaBbCcDdEeFfGgJjLlMmNnQqRrSsWwZz";
+        String globalCurrentLine = "";
+
         while (firstPhase) {
             System.out.print("What train would you like to start from? ");
             String startingSubwayLine = scan.nextLine();
-            boolean serveStation = startingStation.servesStation(startingSubwayLine);
-            //System.out.println(serveStation);
-            if (serveStation) {
-                firstPhase = false;
-                secondPhase = true;
-            } else if (subwayLinesString.contains(startingSubwayLine)) {
-                System.out.println("That line doesn't go there. Try again.");
+            if (startingSubwayLine.equalsIgnoreCase("")) {
+                System.out.println("You didn't enter a line. Try again.");
             } else {
-                System.out.println("That's not a subway line. Try again.");
+                boolean serveStation = startingStation.servesStation(startingSubwayLine);
+                if (serveStation) {
+                    firstPhase = false;
+                    globalCurrentLine = startingSubwayLine;
+                    secondPhase = true;
+                } else if (subwayLinesString.contains(startingSubwayLine)) {
+                    System.out.println("That line doesn't go there. Try again.");
+                } else {
+                    System.out.println("That's not a subway line. Try again.");
+                }
             }
+            //System.out.println(serveStation);
         }
 
         while (secondPhase) {
             System.out.print("What train will you transfer to first? ");
             String transferSubwayLine = scan.nextLine();
-            boolean lineConnects =
+            if (transferSubwayLine.equalsIgnoreCase("")) {
+                System.out.println("You didn't enter a line. Try again.");
+            } else {
+                boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, transferSubwayLine);
+                //System.out.println(lineConnects);
+                if (lineConnects) {
+                    secondPhase = false;
+                    globalCurrentLine = transferSubwayLine;
+                    thirdPhase = true;
+                } else if (subwayLinesString.contains(transferSubwayLine)) {
+                    System.out.println("There's no station in the subway where you can transfer to that line. Try again.");
+                } else {
+                    System.out.println("That's not a subway line. Try again.");
+                }
+            }
+        }
+
+        while (thirdPhase) {
+            System.out.print("What train will you transfer to next? ");
+            String secondTransferSubwayLine = scan.nextLine();
+            if (secondTransferSubwayLine.equalsIgnoreCase("")){
+                System.out.println("You didn't enter a line. Try again.");
+            } else {
+                boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, secondTransferSubwayLine);
+                boolean endsAtStation = endingStation.servesStation(secondTransferSubwayLine);
+                //System.out.println(lineConnects);
+                if (lineConnects && endsAtStation) {
+                    thirdPhase = false;
+                    System.out.println("--------------------------------------------------------------------------------");
+                    System.out.println("You made it to your destination!");
+                    System.out.println("--------------------------------------------------------------------------------");
+                } else if (subwayLinesString.contains(secondTransferSubwayLine) && lineConnects || endsAtStation) {
+                    System.out.println("That transfer does not get you to the final station. Try again on your first transfer.");
+                    thirdPhase = false;
+                    secondPhase = true;
+                }  else {
+                    System.out.println("That's not a subway line. Try again.");
+                }
+            }
+
         }
 
 
