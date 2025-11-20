@@ -18,13 +18,6 @@ public class SubwayStation {
     }
 
     public boolean servesStation(String subwayLine) {
-//        for (int i = 0; i < linesInService.length() - 1; i++) {
-//            //DO FOR IN FOR or DOT CONTAINS
-//            if (linesInService.substring(i, i+1).equalsIgnoreCase(subwayLine)) {
-//                return true;
-//            }
-//        }
-//        return false;
         if (linesInService.contains(subwayLine)) {
             return true;
         }

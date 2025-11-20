@@ -13,6 +13,7 @@ public class Main {
         boolean firstPhase = true;
         boolean secondPhase = false;
         boolean thirdPhase = false;
+        boolean completed = false;
 
         ArrayList<String> stationData = getFileData("src/stations");
         ArrayList<SubwayStation> stations = new ArrayList<SubwayStation>();
@@ -54,85 +55,74 @@ public class Main {
         String subwayLinesString = "1234567AaBbCcDdEeFfGgJjLlMmNnQqRrSsWwZz";
         String globalCurrentLine = "";
 
-        while (firstPhase) {
-            System.out.print("What train would you like to start from? ");
-            String startingSubwayLine = scan.nextLine();
-            if (startingSubwayLine.equalsIgnoreCase("")) {
-                System.out.println("You didn't enter a line. Try again.");
-            } else {
-                boolean serveStation = startingStation.servesStation(startingSubwayLine);
-                if (serveStation) {
-                    firstPhase = false;
-                    globalCurrentLine = startingSubwayLine;
-                    secondPhase = true;
-                } else if (subwayLinesString.contains(startingSubwayLine)) {
-                    System.out.println("That line doesn't go there. Try again.");
+        while (!completed) {
+            while (firstPhase) {
+                System.out.print("What train would you like to start from? ");
+                String startingSubwayLine = scan.nextLine();
+                if (startingSubwayLine.equalsIgnoreCase("")) {
+                    System.out.println("You didn't enter a line. Try again.");
                 } else {
-                    System.out.println("That's not a subway line. Try again.");
+                    boolean serveStation = startingStation.servesStation(startingSubwayLine);
+                    if (serveStation) {
+                        firstPhase = false;
+                        globalCurrentLine = startingSubwayLine;
+                        secondPhase = true;
+                    } else if (subwayLinesString.contains(startingSubwayLine)) {
+                        System.out.println("That line doesn't go there. Try again.");
+                    } else {
+                        System.out.println("That's not a subway line. Try again.");
+                    }
                 }
+                //System.out.println(serveStation);
             }
-            //System.out.println(serveStation);
-        }
 
-        while (secondPhase) {
-            System.out.print("What train will you transfer to first? ");
-            String transferSubwayLine = scan.nextLine();
-            if (transferSubwayLine.equalsIgnoreCase("")) {
-                System.out.println("You didn't enter a line. Try again.");
-            } else {
-                boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, transferSubwayLine);
-                //System.out.println(lineConnects);
-                if (lineConnects) {
-                    secondPhase = false;
-                    globalCurrentLine = transferSubwayLine;
-                    thirdPhase = true;
-                } else if (subwayLinesString.contains(transferSubwayLine)) {
-                    System.out.println("There's no station in the subway where you can transfer to that line. Try again.");
+            while (secondPhase) {
+                System.out.print("What train will you transfer to first? ");
+                String transferSubwayLine = scan.nextLine();
+                if (transferSubwayLine.equalsIgnoreCase("")) {
+                    System.out.println("You didn't enter a line. Try again.");
                 } else {
-                    System.out.println("That's not a subway line. Try again.");
-                }
-            }
-        }
-
-        while (thirdPhase) {
-            System.out.print("What train will you transfer to next? ");
-            String secondTransferSubwayLine = scan.nextLine();
-            if (secondTransferSubwayLine.equalsIgnoreCase("")){
-                System.out.println("You didn't enter a line. Try again.");
-            } else {
-                boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, secondTransferSubwayLine);
-                boolean endsAtStation = endingStation.servesStation(secondTransferSubwayLine);
-                //System.out.println(lineConnects);
-                if (lineConnects && endsAtStation) {
-                    thirdPhase = false;
-                    System.out.println("--------------------------------------------------------------------------------");
-                    System.out.println("You made it to your destination!");
-                    System.out.println("--------------------------------------------------------------------------------");
-                } else if (subwayLinesString.contains(secondTransferSubwayLine) && lineConnects || endsAtStation) {
-                    System.out.println("That transfer does not get you to the final station. Try again on your first transfer.");
-                    thirdPhase = false;
-                    secondPhase = true;
-                }  else {
-                    System.out.println("That's not a subway line. Try again.");
+                    boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, transferSubwayLine);
+                    //System.out.println(lineConnects);
+                    if (lineConnects) {
+                        secondPhase = false;
+                        globalCurrentLine = transferSubwayLine;
+                        thirdPhase = true;
+                    } else if (subwayLinesString.contains(transferSubwayLine)) {
+                        System.out.println("There's no station in the subway where you can transfer to that line. Try again.");
+                    } else {
+                        System.out.println("That's not a subway line. Try again.");
+                    }
                 }
             }
 
+            while (thirdPhase) {
+                System.out.print("What train will you transfer to next? ");
+                String secondTransferSubwayLine = scan.nextLine();
+                if (secondTransferSubwayLine.equalsIgnoreCase("")){
+                    System.out.println("You didn't enter a line. Try again.");
+                } else {
+                    boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, secondTransferSubwayLine);
+                    boolean endsAtStation = endingStation.servesStation(secondTransferSubwayLine);
+                    //System.out.println(lineConnects);
+                    if (lineConnects && endsAtStation) {
+                        thirdPhase = false;
+                        completed = true;
+                        System.out.println("--------------------------------------------------------------------------------");
+                        System.out.println("You made it to your destination!");
+                        System.out.println("--------------------------------------------------------------------------------");
+                    } else if (subwayLinesString.contains(secondTransferSubwayLine) && lineConnects || endsAtStation) {
+                        System.out.println("That transfer does not get you to the final station. Try again on your first transfer.");
+                        thirdPhase = false;
+                        secondPhase = true;
+                    }  else {
+                        System.out.println("That's not a subway line. Try again.");
+                    }
+                }
+
+            }
         }
 
-
-        // Below adds all subway stations :
-
-//        SubwayStation firstAvenue = new SubwayStation("First Avenue", "L");
-//        SubwayStation secondAvenue = new SubwayStation("Second Avenue", "F");
-//        SubwayStation ThirdAvenueL = new SubwayStation("Third Avenue", "L");
-//        SubwayStation ThirdAvenue138 = new SubwayStation("Third Avenue-138th Street", "6");
-//        SubwayStation ThirdAvenue149 = new SubwayStation("Third Avenue-149th Street", "25");
-//        SubwayStation WestFourthStreet = new SubwayStation("West Fourth Street-Washington Square", "ABCDEFM");
-//        SubwayStation FourthAvenue = new SubwayStation("Fourth Avenue-Ninth Street", "FGR");
-//        SubwayStation FifthAvenue53 = new SubwayStation("Fifth Avenue-53rd Street", "EM");
-//        SubwayStation FifthAvenue59 = new SubwayStation("Fifth Avenue-59th Street", "RNW");
-//        SubwayStation BryantPark7 = new SubwayStation("Fifth Avenue-Bryant Park", "7");
-//        SubwayStation SixthAvenue = new
     }
 
     public static ArrayList<String> getFileData(String fileName) {
