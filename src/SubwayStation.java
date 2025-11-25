@@ -18,9 +18,6 @@ public class SubwayStation {
     }
 
     public boolean servesStation(String subwayLine) {
-        if (linesInService.contains(subwayLine)) {
-            return true;
-        }
-        return false;
+        return linesInService.contains(subwayLine);
     }
 }

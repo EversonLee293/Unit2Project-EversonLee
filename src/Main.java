@@ -18,6 +18,7 @@ public class Main {
         ArrayList<String> stationData = getFileData("src/stations");
         ArrayList<SubwayStation> stations = new ArrayList<SubwayStation>();
 
+        //Mr Das' help used in below for loop
         for (int i = 0; i < stationData.size(); i++) {
             String line = stationData.get(i);
             String stationName = line.split(",")[0];
@@ -73,7 +74,6 @@ public class Main {
                         System.out.println("That's not a subway line. Try again.");
                     }
                 }
-                //System.out.println(serveStation);
             }
 
             while (secondPhase) {
@@ -83,7 +83,6 @@ public class Main {
                     System.out.println("You didn't enter a line. Try again.");
                 } else {
                     boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, transferSubwayLine);
-                    //System.out.println(lineConnects);
                     if (lineConnects) {
                         secondPhase = false;
                         globalCurrentLine = transferSubwayLine;
@@ -104,7 +103,6 @@ public class Main {
                 } else {
                     boolean lineConnects = SubwayLine.lineConnects(globalCurrentLine, secondTransferSubwayLine);
                     boolean endsAtStation = endingStation.servesStation(secondTransferSubwayLine);
-                    //System.out.println(lineConnects);
                     if (lineConnects && endsAtStation) {
                         thirdPhase = false;
                         completed = true;
@@ -125,6 +123,7 @@ public class Main {
 
     }
 
+    //Mr Das' code below
     public static ArrayList<String> getFileData(String fileName) {
         ArrayList<String> fileData = new ArrayList<String>();
         try {
